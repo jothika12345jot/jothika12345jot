@@ -1,0 +1,46 @@
+
+from textblob import TextBlob
+import pandas as pd
+
+# ===== Sample Social Media Conversations =====
+sample_tweets = [
+    "I absolutely love the new iPhone! So sleek and fast!",
+    "This update ruined everything. Totally disappointed.",
+    "Just an average day, nothing exciting happening.",
+    "Feeling blessed and grateful for everything today 😊",
+    "I hate how slow this app has become.",
+    "The concert last night was mind-blowing!",
+    "Why is customer service always so hard to deal with?",
+    "It’s okay, not bad, not great either.",
+    "Loving the vibes today. Sunshine and coffee!",
+    "Traffic jam again. Late to work. Ugh!"
+]
+
+# ===== Sentiment Analysis Function =====
+def analyze_sentiments(tweet_list):
+    sentiments = []
+    for tweet in tweet_list:
+        blob = TextBlob(tweet)
+        polarity = blob.sentiment.polarity
+        subjectivity = blob.sentiment.subjectivity
+        emotion = (
+            "Positive" if polarity > 0.1 else
+            "Negative" if polarity < -0.1 else
+            "Neutral"
+        )
+        sentiments.append({
+            'Tweet': tweet,
+            'Polarity': polarity,
+            'Subjectivity': subjectivity,
+            'Emotion': emotion
+        })
+    return pd.DataFrame(sentiments)
+
+# ===== Run Analysis =====
+if __name__ == "__main__":
+    df = analyze_sentiments(sample_tweets)
+    print(df[['Tweet', 'Emotion']])
+
+    # Save to CSV
+    df.to_csv("sample_sentiment_results.csv", index=False)
+    print("\nResults saved to 'sample_sentiment_results.csv'")
